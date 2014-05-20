@@ -12,7 +12,6 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
     MainWindow win;
     win.show();
-    qDebug() << "Well done, Git, well done !";
     return app.exec();
 }
 
