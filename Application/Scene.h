@@ -20,6 +20,7 @@ private:
     int _nbVertices;
     int _nbPolygons;
     int _nbObjects;
+    int _nbEdges;
     bool _isolationMode;
     QVector<Entity3D> _entity3DLst;
     QVector<Entity2D> _entity2DLst;
@@ -41,6 +42,16 @@ public:
     void addEntity2D(Entity2D entity);
     void addLight(Light light);
     void addCamera(Camera cam);
+
+    void setNbPolygons(int nbPolygons);
+    void setNbVertices(int nbVertices);
+    void setNbEdges(int nbEdges);
+    void setNbObjects(int nbObjectd);
+
+    int getNbPolygons();
+    int getNbVertices();
+    int getNbEdges();
+    int getNbObjects();
 
     void setDrawableScene();
 

@@ -22,36 +22,10 @@ public:
 
     QString getFileUrl();
 
-    // Widget getters
-    GLView* getView(int index); // index : 0 = Up Left, 1 = Up Right, 2 = Down Left,  3 = Down Right
-    QLabel* getViewText(int index);
-    QWidget* getViewImage(int index);
     QLabel* getFileLabel();
     void keyPressEvent(QKeyEvent *event);
 
-    // Scene Informations Getters
-    QLabel* getAllEntitiesSI();
-    QLabel* getAllPointsSI();
-    QLabel* getAllPolygonsSI();
-
-    QLabel* getEntitiesSI();
-    QLabel* getPolygonsSI();
-    QLabel* getPointsSI();
-
-    // Transform Getters
-    QLineEdit* getPositionX();
-    QLineEdit* getPositionY();
-    QLineEdit* getPositionZ();
-
-    QLineEdit* getRotationX();
-    QLineEdit* getRotationY();
-    QLineEdit* getRotationZ();
-
-    QLineEdit* getScaleX();
-    QLineEdit* getScaleY();
-    QLineEdit* getScaleZ();
-
-    QLineEdit* getNameWidget();
+    void setStats();
 
     Ui::MainWindow* getUi();
     ~MainWindow();

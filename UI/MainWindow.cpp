@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include <QDebug>
 #include <Parser/FbxParser.h>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,7 +22,7 @@ void MainWindow::initialize()
 
     setWindowFlags(Qt::Widget);
 
-    this->fileUrl = "C:/superteapot.FBX";
+    this->fileUrl = QFileDialog::getOpenFileName(this, "Open a FBX file (ASCII coded)", "C:\ ", tr(""));
     this->currentScene =  new Application::Scene();
 
     Parser::FbxParser parser;
@@ -33,22 +34,22 @@ void MainWindow::initialize()
 
     left = new Camera();
     left->setPosition(0, 0, -50);
-    left->setFOV(78.0);
+    left->setFOV(45.0);
 
     this->leftViewGL = new GLView(this, this->currentScene, this->left);
     this->leftViewGL->setName("Left");
     ui->topView->addWidget(this->leftViewGL, 0, 1);
 
 
-   /* up = new Camera();
+  /*  up = new Camera();
     up->setPosition(0, 0, -30);
     up->setFOV(78.0);
 
     this->topViewGL = new GLView(this, this->currentScene, this->up);
     this->topViewGL->setName("Top");
-    ui->topView->addWidget(this->topViewGL, 0, 0);*/
+    ui->topView->addWidget(this->topViewGL, 0, 0);
 
-  /*right = new Camera();
+    right = new Camera();
     right->setPosition(0,0, -50);
     right->setFOV(20.0);
     this->rightViewGL = new GLView(this, this->currentScene, this->right);
@@ -84,9 +85,17 @@ void MainWindow::initialize()
     ui->shader_perspView-> move(5,1);
     ui->shader_perspView->setText("<font color='white'>  Perspective </font>");*/
     connect(ui->openShaderEditor_button, SIGNAL(clicked()), this, SLOT(openShaderEditor()));
+    setStats();
 
     //Prepare Scene
     }
+
+void MainWindow::setStats()
+{
+    ui->entitiesSi_all->setText(QString::number(currentScene->getNbObjects()));
+    ui->pointsSi_all->setText(QString::number(currentScene->getNbVertices()));
+    ui->polygonsSi_all->setText(QString::number(currentScene->getNbPolygons()));
+}
 
 MainWindow::~MainWindow()
 {
@@ -103,101 +112,8 @@ void MainWindow::openShaderEditor()
     this->shaderEditor->show();
 }
 
-GLView* MainWindow::getView(int index)
-{
-    if(index==0)
-        return topViewGL;
-    if(index==1)
-        return leftViewGL;
-    if(index==2)
-        return rightViewGL;
-    if(index==3)
-        return perspViewGL;
-    }
-
-
-QLabel* MainWindow::getFileLabel()
-{
-    return ui->fileUrl_label;
-}
-
-// Scene Informations Getters
-QLabel* MainWindow::getAllEntitiesSI()
-{
-    return ui->entitiesSi_all;
-}
-
-QLabel* MainWindow::getAllPointsSI()
-{
-    return ui->pointsSi_all;
-}
-
-QLabel* MainWindow::getAllPolygonsSI()
-{
-    return ui->polygonsSi_all;
-}
-
-QLabel* MainWindow::getEntitiesSI()
-{
-    return ui->entitiesSi;
-}
-
-QLabel* MainWindow::getPolygonsSI()
-{
-    return ui->polygonsSi;
-}
-
-QLabel* MainWindow::getPointsSI()
-{
-   return ui->pointsSi;
-}
 
 // Transform Getters
-QLineEdit* MainWindow::getPositionX()
-{
-    return ui->xPos;
-}
-
-QLineEdit* MainWindow::getPositionY()
-{
-    return ui->yPos;
-}
-QLineEdit* MainWindow::getPositionZ()
-{
-    return ui->zPos;
-}
-
-QLineEdit* MainWindow::getRotationX()
-{
-    return ui->xRot;
-}
-QLineEdit* MainWindow::getRotationY()
-{
-    return ui->yRot;
-}
-QLineEdit* MainWindow::getRotationZ()
-{
-    return ui->zRot;
-}
-
-QLineEdit* MainWindow::getScaleX()
-{
-    return ui->xSca;
-}
-
-QLineEdit* MainWindow::getScaleY()
-{
-    return ui->ySca;
-}
-QLineEdit* MainWindow::getScaleZ()
-{
-    return ui->zSca;
-}
-
-QLineEdit* MainWindow::getNameWidget()
-{
-    return ui->objectName;
-}
 QString MainWindow::getFileUrl(){
     return fileUrl;
 }

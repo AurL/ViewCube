@@ -79,7 +79,7 @@ void DrawableEntity::initialize(Entities::Entity3D entity){
            colors[i+2]=0.0;
        }
     }
-    this->trianglesFashion = false;
+    this->trianglesFashion = entity.isTriangleFashioned();
     yRot = 90;
     zRot = 90;
 }

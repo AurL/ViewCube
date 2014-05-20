@@ -84,12 +84,12 @@ void GLView::initializeGL(){
     m_matrixUniform = m_program->uniformLocation("matrix");
 
     //Matrices operations
-    {
-        matModel.setToIdentity();
-        matView.setToIdentity();
-        matProjection.setToIdentity();
-        matProjection.perspective(_mainCamera->getFOV(), this->width()/this->height(), 0.1, 1000.0);
-    }
+
+       matModel.setToIdentity();
+       matView.setToIdentity();
+       matProjection.setToIdentity();
+       matProjection.perspective(_mainCamera->getFOV(), this->width()/this->height(), 0.1, 1000.0);
+
     // GL modes
     {
         glEnable(GL_CULL_FACE);
@@ -113,13 +113,12 @@ void GLView::computeCameraMatrix()
     //Matrices computation
     matModel.setToIdentity();
     matView.setToIdentity();
-    matProjection.setToIdentity();
     matrix.setToIdentity();
 
     elevation +=speedY;
     azimuth += speedX;
-    speedY=0;
-    speedX=0;
+    speedY = 0;
+    speedX = 0;
     // Compute view matrix
     matView.translate(0, 0, _mainCamera->getPosition().z());
     matView.rotate(-twist, 0, 0, 1);
@@ -146,15 +145,16 @@ void GLView::setFragmentShader(const char *fragmentS)
 
 void GLView::paintGL()
 {
-    if(debug)
-        qDebug() << "[GLView - " << name <<"] Paint";
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    if(this->isVisible()){
+        if(debug)
+            qDebug() << "[GLView - " << name <<"] Paint";
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    this->display3DEntities(this->currentScene);
-    glBegin(GL_POINTS);
-        glVertex3f(0, 0, 0);
-    glEnd();
-
+        this->display3DEntities(this->currentScene);
+        glBegin(GL_POINTS);
+            glVertex3f(0, 0, 0);
+        glEnd();
+}
 
 }
 
@@ -162,51 +162,47 @@ void GLView::display3DEntities(Scene *scene)
 {
        /* enable z buffer */
         matModel.setToIdentity();
-       for(int i=0; i<drawEntities.count();i++){
+        for(int i=0; i<drawEntities.count();i++){
            DrawableEntity current = drawEntities.at(i);
-           qDebug() << "xRot "<< current.xRot;
-           current.xRot = 0 ;
+
            matModel.rotate(current.xRot, 1, 0, 0);
            matModel.rotate(current.yRot, 0, 1, 0);
            matModel.rotate(current.zRot, 0, 0, 1);
            matModel.translate(-current.centerX, -current.centerY, -current.centerZ);
-          // Compute custom model matrix
+
           // building the final MVP matrix
            matModelView = matView * matModel;
-           matProjection.setToIdentity();
-           matProjection.perspective(_mainCamera->getFOV(), this->width()/this->height(), 0.1, 1000.0);
-           qDebug() << matProjection;
            matrix = matProjection * matModelView;
 
            m_program->bind();
            m_program->setUniformValue(m_matrixUniform, matrix);
           // m_program->setUniformValue(m_matrixModelViewUniform, matModelView);
            displayGizmos();
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glVertexPointer(3, GL_FLOAT, 0, current.vertices);
+           glEnableClientState(GL_VERTEX_ARRAY);
+           glVertexPointer(3, GL_FLOAT, 0, current.vertices);
 
-            glVertexAttribPointer(m_colAttr,3, GL_FLOAT, GL_FALSE, 0, current.colors );
-            glEnableVertexAttribArray(1);
+           glVertexAttribPointer(m_colAttr,3, GL_FLOAT, GL_FALSE, 0, current.colors );
+           glEnableVertexAttribArray(1);
 
-            if(model)
+           if(model)
                 if(current.trianglesFashion){
                   glDrawElements(GL_TRIANGLES,current.drawCount,GL_UNSIGNED_INT, current.polygons );
                 }
-            else
+           else
                 {
                      glDrawElements(GL_QUADS,current.drawCount,GL_UNSIGNED_INT, current.polygons );
                 }
 
-            glDisableVertexAttribArray(1);
-            // Vertices
-            if(vertices){
+           glDisableVertexAttribArray(1);
+           // Vertices
+           if(vertices){
                 glColor3f(1.0, 1.0, 1.0);
                 glPointSize(4);
                 glDrawElements(GL_POINTS, current.drawCount, GL_UNSIGNED_INT, current.polygons);
             }
 
             // Wireframe
-            if(wireframe) {
+           if(wireframe) {
                 glLineWidth(1);
                 glDrawElements(GL_LINES, current.edgesCount,GL_UNSIGNED_INT, current.edges );
             }
@@ -219,18 +215,20 @@ void GLView::display3DEntities(Scene *scene)
 void GLView::displayGizmos(){
     glLineWidth(0.2);
     glBegin(GL_LINES);
-    glVertex3f(-5.0, 0.0, 0.0);
-    glVertex3f(5.0, 0.0, 0.0);
+        glVertex3f(-5.0, 0.0, 0.0);
+        glVertex3f(5.0, 0.0, 0.0);
     glEnd();
+
     glLineWidth(2.0);
     glBegin(GL_LINES);
-    glVertex3f(0.0, -5.0, 0.0);
-    glVertex3f(0.0, 5.0, 0.0);
+        glVertex3f(0.0, -5.0, 0.0);
+        glVertex3f(0.0, 5.0, 0.0);
     glEnd();
-   glLineWidth(4.0);
+
+    glLineWidth(4.0);
     glBegin(GL_LINES);
-    glVertex3f(0.0, 0.0, -0.0);
-    glVertex3f(0.0, 0.0, 5.0);
+        glVertex3f(0.0, 0.0, -0.0);
+        glVertex3f(0.0, 0.0, 5.0);
     glEnd();
     glLineWidth(4.0);
 
@@ -319,6 +317,7 @@ void GLView::wheelEvent(QWheelEvent *wheelEvent)
 }
 
 void GLView::resizeEvent(QResizeEvent *event){
+    qDebug() << "Resize" ;
 
     glViewport(0,0,(float)this->width(), (float)this->height());
     matProjection.setToIdentity();

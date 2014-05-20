@@ -119,6 +119,7 @@ bool FbxParser::parseObjectProperties(){
             ssplit = ssplit[1].split(",");
 
             currentEntity.setTriangleFashion((ssplit[2].toInt(&ok)<0));
+            qDebug() << " FASHION PARSER : " << (ssplit[2].toInt(&ok)<0);
             do{
                 float f;
                 for(int i=0;i<ssplit.count();i++){
