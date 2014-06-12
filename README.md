@@ -1,4 +1,4 @@
 ViewCube
 ========
 
-Small Qt\OpenGL\HLSL Project
+Little Qt\OpenGL\HLSL Project
