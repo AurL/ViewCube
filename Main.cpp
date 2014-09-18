@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv)
 {
-    //This is a change
+    //This is a change from Paris
     QApplication app(argc, argv);
     MainWindow win;
     win.show();
